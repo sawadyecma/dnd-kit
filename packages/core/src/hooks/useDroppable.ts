@@ -1,9 +1,4 @@
-import {
-  // useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react';
+import {useCallback, useContext, useEffect, useRef} from 'react';
 import {
   useIsomorphicLayoutEffect,
   useLatestValue,
@@ -14,7 +9,7 @@ import {
 import {InternalContext, Action, Data} from '../store';
 import type {ClientRect, UniqueIdentifier} from '../types';
 
-// import {useResizeObserver} from './utilities';
+import {useResizeObserver} from './utilities';
 
 interface ResizeObserverConfig {
   /** Whether the ResizeObserver should be disabled entirely */
@@ -37,27 +32,23 @@ export interface UseDroppableArguments {
 
 const ID_PREFIX = 'Droppable';
 
-// const defaultResizeObserverConfig = {
-//   timeout: 25,
-// };
+const defaultResizeObserverConfig = {
+  timeout: 25,
+};
 
 export function useDroppable({
   data,
   disabled = false,
   id,
-}: // resizeObserverConfig,
-UseDroppableArguments) {
+  resizeObserverConfig,
+}: UseDroppableArguments) {
   const key = useUniqueId(ID_PREFIX);
-  const {
-    active,
-    dispatch,
-    over,
-    // measureDroppableContainers,
-  } = useContext(InternalContext);
+  const {active, dispatch, over, measureDroppableContainers} = useContext(
+    InternalContext
+  );
   const resizeObserverConnected = useRef(false);
   const rect = useRef<ClientRect | null>(null);
-  // const callbackId = useRef<NodeJS.Timeout | null>(null);
-  /*
+  const callbackId = useRef<NodeJS.Timeout | null>(null);
   const {
     disabled: resizeObserverDisabled,
     updateMeasurementsFor,
@@ -66,9 +57,7 @@ UseDroppableArguments) {
     ...defaultResizeObserverConfig,
     ...resizeObserverConfig,
   };
-  */
-  // const ids = useLatestValue(updateMeasurementsFor ?? id);
-  /*
+  const ids = useLatestValue(updateMeasurementsFor ?? id);
   const handleResize = useCallback(
     () => {
       if (!resizeObserverConnected.current) {
@@ -92,12 +81,11 @@ UseDroppableArguments) {
     //eslint-disable-next-line react-hooks/exhaustive-deps
     [resizeObserverTimeout]
   );
-  */
 
-  // const resizeObserver = useResizeObserver({
-  //   onResize: handleResize,
-  //   disabled: resizeObserverDisabled || !active,
-  // });
+  const resizeObserver = useResizeObserver({
+    onResize: handleResize,
+    disabled: resizeObserverDisabled || !active,
+  });
   // const handleNodeChange = useCallback(
   // (newElement: HTMLElement | null, previousElement: HTMLElement | null) => {
   // if (!resizeObserver) {
@@ -120,15 +108,14 @@ UseDroppableArguments) {
   const dataRef = useLatestValue(data);
 
   useEffect(() => {
-    //   if (!resizeObserver || !nodeRef.current) {
-    //     return;
-    //   }
+    if (!resizeObserver || !nodeRef.current) {
+      return;
+    }
 
     //   resizeObserver.disconnect();
     resizeObserverConnected.current = false;
     //   resizeObserver.observe(nodeRef.current);
-    // }, [nodeRef, resizeObserver]);
-  }, []);
+  }, [nodeRef, resizeObserver]);
 
   useIsomorphicLayoutEffect(
     () => {
