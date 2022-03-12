@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import {ItemList} from './itemList';
 
 export default {
-  title: 'Core/Unmount',
-  // title: 'Core/Draggable/Hooks/Unmount',
+  title: 'Core/UnmountSortable',
 };
 
 function UnmountStory() {
