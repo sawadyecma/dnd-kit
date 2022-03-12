@@ -112,9 +112,19 @@ export function useDroppable({
       return;
     }
 
-    //   resizeObserver.disconnect();
+    resizeObserver.disconnect();
     resizeObserverConnected.current = false;
-    //   resizeObserver.observe(nodeRef.current);
+    resizeObserver.observe(nodeRef.current);
+
+    return () => {
+      console.log('resizeObserver will be disconnected');
+      if (!resizeObserver || !nodeRef.current) {
+        return;
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      resizeObserver.unobserve(nodeRef.current);
+      resizeObserver.disconnect();
+    };
   }, [nodeRef, resizeObserver]);
 
   useIsomorphicLayoutEffect(
