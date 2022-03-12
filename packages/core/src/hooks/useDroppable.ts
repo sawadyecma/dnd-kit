@@ -86,25 +86,24 @@ export function useDroppable({
     onResize: handleResize,
     disabled: resizeObserverDisabled || !active,
   });
-  // const handleNodeChange = useCallback(
-  // (newElement: HTMLElement | null, previousElement: HTMLElement | null) => {
-  // if (!resizeObserver) {
-  // return;
-  // }
+  const handleNodeChange = useCallback(
+    (newElement: HTMLElement | null, previousElement: HTMLElement | null) => {
+      if (!resizeObserver) {
+        return;
+      }
 
-  // if (previousElement) {
-  // resizeObserver.unobserve(previousElement);
-  // resizeObserverConnected.current = false;
-  // }
+      if (previousElement) {
+        resizeObserver.unobserve(previousElement);
+        resizeObserverConnected.current = false;
+      }
 
-  // if (newElement) {
-  //   resizeObserver.observe(newElement);
-  // }
-  // },
-  // [resizeObserver]
-  // );
-  const [nodeRef, setNodeRef] = useNodeRef();
-  // const [nodeRef, setNodeRef] = useNodeRef(handleNodeChange);
+      if (newElement) {
+        resizeObserver.observe(newElement);
+      }
+    },
+    [resizeObserver]
+  );
+  const [nodeRef, setNodeRef] = useNodeRef(handleNodeChange);
   const dataRef = useLatestValue(data);
 
   useEffect(() => {
@@ -142,13 +141,11 @@ export function useDroppable({
       });
 
       return () => {
-        console.log('[RegisterDroppable]unmount start');
-        // dispatch({
-        //   type: Action.UnregisterDroppable,
-        //   key,
-        //   id,
-        // });
-        console.log('[RegisterDroppable]unmount end');
+        dispatch({
+          type: Action.UnregisterDroppable,
+          key,
+          id,
+        });
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,14 +154,12 @@ export function useDroppable({
 
   useEffect(
     () => {
-      console.log('[useEffect]SetDroppableDisabled start');
-      // dispatch({
-      //   type: Action.SetDroppableDisabled,
-      //   id,
-      //   key,
-      //   disabled,
-      // });
-      console.log('[useEffect]SetDroppableDisabled end');
+      dispatch({
+        type: Action.SetDroppableDisabled,
+        id,
+        key,
+        disabled,
+      });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [disabled]
