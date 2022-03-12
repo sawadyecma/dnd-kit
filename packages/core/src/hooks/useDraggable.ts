@@ -5,6 +5,7 @@ import {
   useIsomorphicLayoutEffect,
   useLatestValue,
   useUniqueId,
+  canUseDOM,
 } from '@dnd-kit/utilities';
 
 import {InternalContext, Data} from '../store';
@@ -46,12 +47,17 @@ export function useDraggable({
     draggableNodes,
     over,
   } = useContext(InternalContext);
+
+  const ctx = useContext(InternalContext);
+  if (key === 'Droppable-1') console.log(ctx);
+
   const {role = defaultRole, roleDescription = 'draggable', tabIndex = 0} =
     attributes ?? {};
   const isDragging = active?.id === id;
   const transform: Transform | null = useContext(
     isDragging ? ActiveDraggableContext : NullContext
   );
+
   const [node, setNodeRef] = useNodeRef();
   const listeners = useSyntheticListeners(activators, id);
   const dataRef = useLatestValue(data);
@@ -61,11 +67,20 @@ export function useDraggable({
       draggableNodes[id] = {id, key, node, data: dataRef};
 
       return () => {
-        const node = draggableNodes[id];
+        if (key === 'Droppable-1') {
+          console.log('[START(unmount start)]');
+          console.log('key', key);
 
-        if (node && node.key === key) {
-          delete draggableNodes[id];
+          console.log('canUseDOM', canUseDOM);
+
+          const node = draggableNodes[id];
+          console.log('node', node);
+          console.log('[END(before return)]');
         }
+        return;
+        // if (node && node.key === key) {
+        //   delete draggableNodes[id];
+        // }
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
