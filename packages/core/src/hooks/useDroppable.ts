@@ -54,7 +54,7 @@ UseDroppableArguments) {
     over,
     // measureDroppableContainers,
   } = useContext(InternalContext);
-  // const resizeObserverConnected = useRef(false);
+  const resizeObserverConnected = useRef(false);
   const rect = useRef<ClientRect | null>(null);
   // const callbackId = useRef<NodeJS.Timeout | null>(null);
   /*
@@ -119,15 +119,16 @@ UseDroppableArguments) {
   // const [nodeRef, setNodeRef] = useNodeRef(handleNodeChange);
   const dataRef = useLatestValue(data);
 
-  // useEffect(() => {
-  //   if (!resizeObserver || !nodeRef.current) {
-  //     return;
-  //   }
+  useEffect(() => {
+    //   if (!resizeObserver || !nodeRef.current) {
+    //     return;
+    //   }
 
-  //   resizeObserver.disconnect();
-  //   resizeObserverConnected.current = false;
-  //   resizeObserver.observe(nodeRef.current);
-  // }, [nodeRef, resizeObserver]);
+    //   resizeObserver.disconnect();
+    resizeObserverConnected.current = false;
+    //   resizeObserver.observe(nodeRef.current);
+    // }, [nodeRef, resizeObserver]);
+  }, []);
 
   useIsomorphicLayoutEffect(
     () => {
