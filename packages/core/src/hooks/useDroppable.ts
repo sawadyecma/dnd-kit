@@ -1,4 +1,9 @@
-import {useCallback, useContext, useEffect, useRef} from 'react';
+import {
+  // useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   useIsomorphicLayoutEffect,
   useLatestValue,
@@ -9,7 +14,7 @@ import {
 import {InternalContext, Action, Data} from '../store';
 import type {ClientRect, UniqueIdentifier} from '../types';
 
-import {useResizeObserver} from './utilities';
+// import {useResizeObserver} from './utilities';
 
 interface ResizeObserverConfig {
   /** Whether the ResizeObserver should be disabled entirely */
@@ -32,23 +37,27 @@ export interface UseDroppableArguments {
 
 const ID_PREFIX = 'Droppable';
 
-const defaultResizeObserverConfig = {
-  timeout: 25,
-};
+// const defaultResizeObserverConfig = {
+//   timeout: 25,
+// };
 
 export function useDroppable({
   data,
   disabled = false,
   id,
-  resizeObserverConfig,
-}: UseDroppableArguments) {
+}: // resizeObserverConfig,
+UseDroppableArguments) {
   const key = useUniqueId(ID_PREFIX);
-  const {active, dispatch, over, measureDroppableContainers} = useContext(
-    InternalContext
-  );
-  const resizeObserverConnected = useRef(false);
+  const {
+    active,
+    dispatch,
+    over,
+    // measureDroppableContainers,
+  } = useContext(InternalContext);
+  // const resizeObserverConnected = useRef(false);
   const rect = useRef<ClientRect | null>(null);
-  const callbackId = useRef<NodeJS.Timeout | null>(null);
+  // const callbackId = useRef<NodeJS.Timeout | null>(null);
+  /*
   const {
     disabled: resizeObserverDisabled,
     updateMeasurementsFor,
@@ -57,7 +66,9 @@ export function useDroppable({
     ...defaultResizeObserverConfig,
     ...resizeObserverConfig,
   };
-  const ids = useLatestValue(updateMeasurementsFor ?? id);
+  */
+  // const ids = useLatestValue(updateMeasurementsFor ?? id);
+  /*
   const handleResize = useCallback(
     () => {
       if (!resizeObserverConnected.current) {
@@ -81,39 +92,42 @@ export function useDroppable({
     //eslint-disable-next-line react-hooks/exhaustive-deps
     [resizeObserverTimeout]
   );
-  const resizeObserver = useResizeObserver({
-    onResize: handleResize,
-    disabled: resizeObserverDisabled || !active,
-  });
-  const handleNodeChange = useCallback(
-    (newElement: HTMLElement | null, previousElement: HTMLElement | null) => {
-      if (!resizeObserver) {
-        return;
-      }
+  */
 
-      if (previousElement) {
-        resizeObserver.unobserve(previousElement);
-        resizeObserverConnected.current = false;
-      }
+  // const resizeObserver = useResizeObserver({
+  //   onResize: handleResize,
+  //   disabled: resizeObserverDisabled || !active,
+  // });
+  // const handleNodeChange = useCallback(
+  // (newElement: HTMLElement | null, previousElement: HTMLElement | null) => {
+  // if (!resizeObserver) {
+  // return;
+  // }
 
-      if (newElement) {
-        resizeObserver.observe(newElement);
-      }
-    },
-    [resizeObserver]
-  );
-  const [nodeRef, setNodeRef] = useNodeRef(handleNodeChange);
+  // if (previousElement) {
+  // resizeObserver.unobserve(previousElement);
+  // resizeObserverConnected.current = false;
+  // }
+
+  // if (newElement) {
+  //   resizeObserver.observe(newElement);
+  // }
+  // },
+  // [resizeObserver]
+  // );
+  const [nodeRef, setNodeRef] = useNodeRef();
+  // const [nodeRef, setNodeRef] = useNodeRef(handleNodeChange);
   const dataRef = useLatestValue(data);
 
-  useEffect(() => {
-    if (!resizeObserver || !nodeRef.current) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!resizeObserver || !nodeRef.current) {
+  //     return;
+  //   }
 
-    resizeObserver.disconnect();
-    resizeObserverConnected.current = false;
-    resizeObserver.observe(nodeRef.current);
-  }, [nodeRef, resizeObserver]);
+  //   resizeObserver.disconnect();
+  //   resizeObserverConnected.current = false;
+  //   resizeObserver.observe(nodeRef.current);
+  // }, [nodeRef, resizeObserver]);
 
   useIsomorphicLayoutEffect(
     () => {
@@ -129,12 +143,15 @@ export function useDroppable({
         },
       });
 
-      return () =>
-        dispatch({
-          type: Action.UnregisterDroppable,
-          key,
-          id,
-        });
+      return () => {
+        console.log('[RegisterDroppable]unmount start');
+        // dispatch({
+        //   type: Action.UnregisterDroppable,
+        //   key,
+        //   id,
+        // });
+        console.log('[RegisterDroppable]unmount end');
+      };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [id]
@@ -142,12 +159,14 @@ export function useDroppable({
 
   useEffect(
     () => {
-      dispatch({
-        type: Action.SetDroppableDisabled,
-        id,
-        key,
-        disabled,
-      });
+      console.log('[useEffect]SetDroppableDisabled start');
+      // dispatch({
+      //   type: Action.SetDroppableDisabled,
+      //   id,
+      //   key,
+      //   disabled,
+      // });
+      console.log('[useEffect]SetDroppableDisabled end');
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [disabled]
